@@ -1,0 +1,5 @@
+package com.mystreet.api.config;
+import org.springframework.beans.factory.annotation.Value;import org.springframework.context.annotation.*;import org.springframework.security.config.annotation.web.builders.HttpSecurity;import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;import org.springframework.security.web.SecurityFilterChain;import org.springframework.web.cors.*;import java.util.List;
+@Configuration public class SecurityConfig { @Value("${app.cors-origin}") String origin; @Bean BCryptPasswordEncoder encoder(){return new BCryptPasswordEncoder();}
+ @Bean SecurityFilterChain filter(HttpSecurity http)throws Exception{return http.csrf(c->c.disable()).cors(c->c.configurationSource(cors())).authorizeHttpRequests(a->a.anyRequest().permitAll()).build();}
+ @Bean CorsConfigurationSource cors(){CorsConfiguration c=new CorsConfiguration();c.setAllowedOrigins(List.of(origin));c.setAllowedHeaders(List.of("*"));c.setAllowedMethods(List.of("*"));UrlBasedCorsConfigurationSource s=new UrlBasedCorsConfigurationSource();s.registerCorsConfiguration("/**",c);return s;}}
